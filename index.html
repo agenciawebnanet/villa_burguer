@@ -7,11 +7,27 @@
 <meta name="description" content="Explore o cardápio da Villa Burguer e monte seu pedido pelo WhatsApp.">
 <title>Villa Burguer • Cardápio digital</title>
 <link rel="icon" href="ramo.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="app-192.png">
 <link rel="stylesheet" href="estilo.css">
+<script defer src="pwa.js"></script>
 <script defer src="catalogo.js"></script>
 <script defer src="menu.js"></script>
 </head>
 <body>
+<section id="demo" class="demo-screen" aria-labelledby="demo-title">
+  <div class="demo-card">
+    <img src="ramo.svg" alt="" width="58" height="58">
+    <p class="eyebrow">VILLA BURGUER</p>
+    <h1 id="demo-title">Cardápio de demonstração</h1>
+    <p>Esta é uma demonstração de cardápio digital e pode conter erros. Explore o menu para conhecer como ele funciona.</p>
+    <button id="enter-menu" class="primary" type="button">Abrir cardápio</button>
+    <button class="install-action" type="button" data-install aria-expanded="false" aria-controls="demo-install-help" hidden>Instalar aplicativo</button>
+    <p class="install-help small" id="demo-install-help" hidden></p>
+    <noscript>Ative o JavaScript para abrir o cardápio interativo.</noscript>
+  </div>
+</section>
+<div id="menu-content" hidden>
 <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 <symbol id="icon-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10h-6v-6H9v6H3z"/></symbol>
 <symbol id="icon-menu" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
@@ -22,7 +38,7 @@
 </svg>
 <header class="bar" id="inicio">
 <div class="wrap top">
-<a class="brand" href="#inicio"><img src="ramo.svg" alt=""><span>Villa Burguer<small>Cardápio digital</small></span></a>
+<a class="brand" href="#inicio" id="menu-start"><img src="ramo.svg" alt=""><span>Villa Burguer<small>Cardápio digital</small></span></a>
 <button class="light top-bag" type="button" data-open aria-label="Abrir sacola"><svg class="glyph" aria-hidden="true"><use href="#icon-bag"/></svg><span id="count">0</span></button>
 </div>
 </header>
@@ -43,7 +59,11 @@
 <p class="small">Fotos ilustrativas.</p>
 </section>
 </main>
-<footer class="wrap footer"><span class="brand"><img src="ramo.svg" alt="">Villa Burguer</span><p>Cardápio digital</p></footer>
+<footer class="wrap footer">
+<span class="brand"><img src="ramo.svg" alt="">Villa Burguer</span>
+<button class="install-action" type="button" data-install aria-expanded="false" aria-controls="menu-install-help" hidden>Instalar aplicativo</button>
+<p class="install-help small" id="menu-install-help" hidden></p>
+</footer>
 <nav id="sticky" aria-label="Atalhos">
 <a href="#inicio"><svg class="glyph" aria-hidden="true"><use href="#icon-home"/></svg><span>Início</span></a>
 <a href="#cardapio"><svg class="glyph" aria-hidden="true"><use href="#icon-menu"/></svg><span>Cardápio</span></a>
@@ -63,4 +83,5 @@
 <button class="primary send" type="submit">Abrir pedido no WhatsApp ↗</button>
 </form>
 </dialog>
+</div>
 </body></html>

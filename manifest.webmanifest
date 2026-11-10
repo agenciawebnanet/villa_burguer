@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "Villa Burguer • Cardápio digital",
+  "short_name": "Villa Burguer",
+  "description": "Cardápio digital de demonstração da Villa Burguer.",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f0e5",
+  "theme_color": "#263322",
+  "icons": [
+    { "src": "app-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "app-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

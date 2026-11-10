@@ -14,3 +14,7 @@ Abra `index.html` no navegador. Para publicar, coloque o conteúdo desta pasta n
 - A sacola fica no navegador. Nome, endereço e observações só entram na mensagem ao abrir o WhatsApp.
 
 O subtotal representa os itens. Disponibilidade e taxa de entrega são confirmadas com a loja.
+
+## Instalar como aplicativo
+
+Em uma hospedagem HTTPS, use **Instalar aplicativo** na tela de demonstração ou no rodapé. No Safari do iPhone, use **Compartilhar → Adicionar à Tela de Início**. O navegador pede a confirmação da instalação.
