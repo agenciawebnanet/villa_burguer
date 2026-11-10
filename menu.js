@@ -8,6 +8,7 @@ const storageKey = 'villa-burguer-cart-v1';
 const drawer = document.querySelector('#drawer');
 const filters = document.querySelector('#filters');
 const search = document.querySelector('#search');
+const highlights = document.querySelector('#highlights');
 const catalog = document.querySelector('#catalog');
 const checkout = document.querySelector('#checkout');
 const cartPanel = document.querySelector('#cart');
@@ -91,10 +92,11 @@ function itemCard(item, group) {
     body.append(label);
   }
   const bottom = make('div', '', 'item-bottom');
-  const add = button('+ Adicionar', 'primary', () => {
+  const add = button('', 'add', () => {
     changeQuantity(selection.key, 1);
     document.querySelector('#status').textContent = item.name + ' na sacola. Quantidade ' + cart[selection.key] + '.';
   });
+  add.innerHTML = '<svg class="glyph" aria-hidden="true"><use href="#icon-plus"/></svg>';
   add.setAttribute('aria-label', 'Adicionar ' + item.name + ' (' + group.name + ')');
   bottom.append(price, add);
   body.append(bottom);
@@ -105,6 +107,8 @@ function itemCard(item, group) {
 function renderMenu() {
   catalog.replaceChildren();
   const query = normalize(search.value.trim());
+  highlights.hidden = Boolean(query) || activeCategory !== -1;
+  document.querySelector('#vitrine').hidden = Boolean(query);
   catalogo.forEach((group, index) => {
     if (activeCategory !== -1 && index !== activeCategory) return;
     const matches = group.items.filter(item =>
@@ -131,10 +135,12 @@ function renderCart() {
   const count = entries.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = entries.reduce((sum, item) => sum + item.quantity * item.price, 0);
   document.querySelector('#count').textContent = count;
-  document.querySelector('#sticky-count').textContent = count;
-  document.querySelector('#sticky-total').textContent = format(subtotal);
+  const dockCount = document.querySelector('#sticky-count');
+  const dockTotal = document.querySelector('#sticky-total');
+  dockCount.textContent = count;
+  dockTotal.textContent = format(subtotal);
+  dockCount.hidden = dockTotal.hidden = count === 0;
   document.querySelector('#subtotal').textContent = format(subtotal);
-  document.querySelector('#sticky').hidden = !count;
   checkout.hidden = !count;
 
   const previousFocus = document.activeElement?.dataset.cartFocus;
@@ -191,18 +197,48 @@ function orderLink(entries, values) {
   return 'https://wa.me/' + phone + '?text=' + encodeURIComponent(message.join('\n'));
 }
 
+const categoryPhotos = [0, 6, 15, 22, 31, 38, 39, 45];
+const featuredPhotos = [31, 15, 32];
+const featuredCards = featuredPhotos.map(photo => {
+  const group = catalogo.find(category => category.items.some(item => item.pic === photo));
+  return itemCard(group.items.find(item => item.pic === photo), group);
+});
+document.querySelector('#highlight-items').append(...featuredCards);
+
 ['Tudo', ...catalogo.map(group => group.name)].forEach((name, index) => {
-  const filter = button(name, '', () => {
+  const filter = button('', 'category', () => {
     activeCategory = index - 1;
     Array.from(filters.children).forEach((control, controlIndex) => {
       control.setAttribute('aria-pressed', String(index === controlIndex));
     });
     renderMenu();
   });
+  const thumb = make('span', '', 'category-thumb');
+  if (index === 0) {
+    thumb.innerHTML = '<svg class="glyph" aria-hidden="true"><use href="#icon-menu"/></svg>';
+  } else {
+    const image = make('img');
+    image.src = 'fotos/' + categoryPhotos[index - 1] + '.webp';
+    image.alt = '';
+    thumb.append(image);
+  }
+  filter.append(thumb, make('span', name));
   filter.setAttribute('aria-pressed', String(index === 0));
   filters.append(filter);
 });
-search.addEventListener('input', renderMenu);
+search.addEventListener('input', () => {
+  if (activeCategory !== -1) filters.firstElementChild.click();
+  else renderMenu();
+});
+search.addEventListener('keydown', event => {
+  if (event.key === 'Enter') document.querySelector('#cardapio').scrollIntoView();
+});
+document.querySelector('[data-sandwiches]').addEventListener('click', () => {
+  search.value = '';
+  const sandwiches = catalogo.findIndex(group => group.name === 'Sanduíches');
+  filters.children[sandwiches + 1].click();
+  filters.children[sandwiches + 1].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+});
 document.querySelectorAll('[data-open]').forEach(control => {
   control.addEventListener('click', () => drawer.showModal());
 });

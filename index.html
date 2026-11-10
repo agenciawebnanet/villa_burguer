@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#263322">
 <meta name="description" content="Explore o cardápio da Villa Burguer e monte seu pedido pelo WhatsApp.">
 <title>Villa Burguer • Cardápio digital</title>
@@ -12,23 +12,43 @@
 <script defer src="menu.js"></script>
 </head>
 <body>
-<header class="bar"><div class="wrap top"><a class="brand" href="#"><img src="ramo.svg" alt="">Villa Burguer</a><button class="light" type="button" data-open>Sacola <span id="count">0</span></button></div></header>
-<main>
-<section class="hero">
-<div class="wrap hero-inner">
-<div class="hero-copy"><p class="eyebrow">CARDÁPIO DIGITAL</p><h1>Villa<br>Burguer<span>.</span></h1><p>Hambúrgueres, pizzas, massas e petiscos feitos com ingredientes selecionados.</p><a class="primary" href="#cardapio">Explorar cardápio <span aria-hidden="true">↓</span></a></div>
-<figure class="hero-photo"><img src="fotos/31.webp" alt="Hambúrguer Villa Burguer" fetchpriority="high"><figcaption>O sanduíche da casa</figcaption></figure>
+<svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<symbol id="icon-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10h-6v-6H9v6H3z"/></symbol>
+<symbol id="icon-menu" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+<symbol id="icon-bag" viewBox="0 0 24 24"><path d="M5 8h14l2 13H3L5 8Zm4 1V6a3 3 0 0 1 6 0v3"/></symbol>
+<symbol id="icon-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
+<symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+<symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+</svg>
+<header class="bar" id="inicio">
+<div class="wrap top">
+<a class="brand" href="#inicio"><img src="ramo.svg" alt=""><span>Villa Burguer<small>Cardápio digital</small></span></a>
+<button class="light top-bag" type="button" data-open aria-label="Abrir sacola"><svg class="glyph" aria-hidden="true"><use href="#icon-bag"/></svg><span id="count">0</span></button>
 </div>
+</header>
+<main class="wrap">
+<label class="search"><svg class="glyph" aria-hidden="true"><use href="#icon-search"/></svg><input id="search" type="search" placeholder="O que você quer pedir?" aria-label="Buscar no cardápio"></label>
+<section class="hero" id="vitrine" aria-labelledby="hero-title">
+<div class="hero-copy"><p class="eyebrow">O SANDUÍCHE DA CASA</p><h1 id="hero-title">Villa<br>Burguer</h1><p>Duas carnes, queijo, ovo e batata palha.</p><a class="hero-link" href="#cardapio" data-sandwiches>Ver sanduíches <svg class="glyph" aria-hidden="true"><use href="#icon-arrow"/></svg></a></div>
+<img class="hero-photo" src="fotos/31.webp" alt="Hambúrguer Villa Burguer" fetchpriority="high">
 </section>
-<section id="cardapio" class="wrap menu">
-<div class="menu-top"><div><p class="eyebrow">DA COZINHA À SUA MESA</p><h2>O que vai pedir?</h2></div><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Buscar no cardápio" aria-label="Buscar no cardápio"></label></div>
+<section id="cardapio" class="menu" aria-labelledby="menu-title">
+<div class="menu-top"><div><p class="eyebrow">ESCOLHA SUA CATEGORIA</p><h2 id="menu-title">Cardápio</h2></div></div>
 <nav id="filters" aria-label="Categorias do cardápio"></nav>
+<section id="highlights" class="group" aria-labelledby="highlights-title">
+<div class="section-head"><h3 id="highlights-title">Destaques da Villa</h3><a href="#catalog">Ver todos <svg class="glyph" aria-hidden="true"><use href="#icon-arrow"/></svg></a></div>
+<div class="grid" id="highlight-items"></div>
+</section>
 <div id="catalog"></div>
 <p class="small">Fotos ilustrativas.</p>
 </section>
 </main>
 <footer class="wrap footer"><span class="brand"><img src="ramo.svg" alt="">Villa Burguer</span><p>Cardápio digital</p></footer>
-<div id="sticky" hidden><button type="button" class="primary" data-open><span id="sticky-count"></span><span>Ver sacola</span><strong id="sticky-total"></strong></button></div>
+<nav id="sticky" aria-label="Atalhos">
+<a href="#inicio"><svg class="glyph" aria-hidden="true"><use href="#icon-home"/></svg><span>Início</span></a>
+<a href="#cardapio"><svg class="glyph" aria-hidden="true"><use href="#icon-menu"/></svg><span>Cardápio</span></a>
+<button type="button" class="dock-bag" data-open><svg class="glyph" aria-hidden="true"><use href="#icon-bag"/></svg><span><span>Sacola <b id="sticky-count" hidden></b></span><strong id="sticky-total" hidden></strong></span></button>
+</nav>
 <div id="status" class="sr" role="status"></div>
 <dialog id="drawer" aria-labelledby="cart-title">
 <div class="drawer-head"><div><p class="eyebrow">VILLA BURGUER</p><h2 id="cart-title">Sua sacola</h2></div><button id="close" class="icon" type="button" aria-label="Fechar sacola">×</button></div>
