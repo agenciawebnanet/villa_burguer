@@ -1,7 +1,7 @@
 'use strict';
 
 const cachePrefix = 'villa-burguer-';
-const cacheName = cachePrefix + 'v1';
+const cacheName = cachePrefix + 'v2';
 const shell = [
   'index.html', 'estilo.css', 'catalogo.js', 'menu.js', 'pwa.js', 'ramo.svg',
   'manifest.webmanifest', 'app-192.png', 'app-512.png',

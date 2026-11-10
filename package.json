@@ -1,0 +1,7 @@
+{
+  "name": "villa-burguer",
+  "private": true,
+  "dependencies": {
+    "pg": "^8.16.3"
+  }
+}

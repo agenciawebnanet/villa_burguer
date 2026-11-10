@@ -735,3 +735,5 @@ const catalogo = [
     ]
   }
 ];
+
+if (typeof module !== "undefined") module.exports = catalogo;

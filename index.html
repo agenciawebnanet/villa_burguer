@@ -74,13 +74,38 @@
 <div class="drawer-head"><div><p class="eyebrow">VILLA BURGUER</p><h2 id="cart-title">Sua sacola</h2></div><button id="close" class="icon" type="button" aria-label="Fechar sacola">×</button></div>
 <div id="cart"></div>
 <form id="checkout">
-<div class="subtotal"><strong>Subtotal dos itens</strong><strong id="subtotal"></strong></div>
-<label>Seu nome<input name="cliente" required maxlength="80" autocomplete="name"></label>
-<label>Como prefere receber?<select name="modo"><option>Retirada</option><option>Entrega</option></select></label>
-<label id="address" hidden>Endereço de entrega<input name="endereco" maxlength="180" autocomplete="street-address"></label>
-<label>Observações <span class="small">(opcional)</span><textarea name="obs" rows="2" maxlength="250" placeholder="Ex.: sem cebola"></textarea></label>
-<p class="small">Confirme disponibilidade e eventual taxa de entrega com a loja pelo WhatsApp.</p>
-<button class="primary send" type="submit">Abrir pedido no WhatsApp ↗</button>
+  <fieldset>
+    <legend>1. Seus dados</legend>
+    <label>Nome completo<input name="cliente" required maxlength="80" autocomplete="name" placeholder="Seu nome"></label>
+    <label>Celular com DDD<input name="telefone" type="tel" required maxlength="18" autocomplete="tel" placeholder="(84) 99999-9999"></label>
+  </fieldset>
+  <fieldset>
+    <legend>2. Recebimento</legend>
+    <label>Como prefere receber?<select name="modo"><option>Retirada</option><option>Entrega</option></select></label>
+    <div id="address" class="address-fields" hidden>
+      <label>Bairro<select name="bairro"><option value="">Escolha seu bairro</option></select></label>
+      <p class="small">Bairros e taxas fictícios para esta demonstração.</p>
+      <div class="address-row">
+        <label>Rua ou avenida<input name="rua" maxlength="120" autocomplete="address-line1"></label>
+        <label>Número<input name="numero" maxlength="16" placeholder="ou S/N"></label>
+      </div>
+      <label>Complemento <span class="small">(opcional)</span><input name="complemento" maxlength="70" autocomplete="address-line2"></label>
+      <label>Ponto de referência <span class="small">(opcional)</span><input name="referencia" maxlength="90"></label>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>3. Pagamento e observações</legend>
+    <label>Forma de pagamento<select name="pagamento" required><option value="">Selecione</option><option>Pix</option><option>Cartão</option><option>Dinheiro</option></select></label>
+    <label id="cash-change" hidden>Troco para <span class="small">(opcional)</span><input name="troco" inputmode="decimal" maxlength="12" placeholder="Ex.: 100,00"></label>
+    <label>Observações <span class="small">(opcional)</span><textarea name="obs" rows="2" maxlength="250" placeholder="Ex.: sem cebola"></textarea></label>
+  </fieldset>
+  <div class="checkout-summary" aria-live="polite">
+    <div><span>Subtotal dos itens</span><strong id="subtotal"></strong></div>
+    <div id="delivery-summary" hidden><span>Taxa de entrega</span><strong id="delivery-fee"></strong></div>
+    <div class="checkout-total"><strong>Total do pedido</strong><strong id="order-total"></strong></div>
+  </div>
+  <p class="small">Revise o pedido e confirme o envio no WhatsApp.</p>
+  <button class="primary send" type="submit">Continuar para o WhatsApp ↗</button>
 </form>
 </dialog>
 </div>

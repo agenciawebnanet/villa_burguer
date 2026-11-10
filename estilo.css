@@ -155,3 +155,31 @@ input, select, textarea { border: 1px solid var(--line); background: var(--cream
 }
 .install-help { width: 100%; padding: 10px 12px; border-radius: 10px; background: #e5ead7; }
 .footer { flex-wrap: wrap; }
+
+#checkout fieldset {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+#checkout legend { padding: 0 5px; color: var(--green); font-weight: 800; }
+.address-fields { display: grid; gap: 10px; }
+.address-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(75px, 25%); gap: 8px; }
+.checkout-summary { display: grid; gap: 6px; padding: 12px; border-radius: 12px; background: #e5ead7; }
+.checkout-summary > div { display: flex; justify-content: space-between; gap: 10px; }
+.checkout-total { padding-top: 7px; border-top: 1px solid #c7d0b6; color: var(--green); }
+
+.master { max-width: 630px; padding-block: 22px 45px; }
+.master h1 { font-size: clamp(2rem, 7vw, 3rem); }
+.master > p { margin-bottom: 14px; }
+.master-card { display: grid; gap: 14px; padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--cream); }
+.master-card h2 { font-size: 1.55rem; }
+.master-card label { display: grid; gap: 5px; font-weight: 650; }
+.master-card .master-check { display: flex; gap: 8px; align-items: center; }
+.master-card input, .master-card select { min-width: 0; width: 100%; }
+.master-card input[type="checkbox"] { width: auto; }
+.master-card img { width: min(100%, 280px); height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px; }
+.master-card button { min-height: 44px; }

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Painel Villa Burguer</title>
+  <link rel="icon" href="/ramo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/estilo.css">
+  <script defer src="/catalogo.js"></script>
+  <script defer src="/master.js"></script>
+</head>
+<body>
+  <header class="wrap top">
+    <a class="brand" href="/"><img src="/ramo.svg" alt=""><span>Villa Burguer<small>Administração</small></span></a>
+    <button id="logout" class="install-action" type="button" hidden>Sair</button>
+  </header>
+  <main class="wrap master">
+    <h1>Painel do cardápio</h1>
+    <p id="master-status" role="status">Verificando acesso…</p>
+    <form id="master-login" class="master-card" hidden>
+      <label>Senha administrativa<input name="password" type="password" required maxlength="256" autocomplete="current-password"></label>
+      <button class="primary" type="submit">Entrar</button>
+    </form>
+    <form id="master-editor" class="master-card" hidden>
+      <h2>Preço e imagem</h2>
+      <label>Produto e opção<select name="item" required></select></label>
+      <img id="master-photo" width="280" height="210" alt="Prévia da foto do produto">
+      <label>Preço em reais<input name="price" inputmode="decimal" required maxlength="12" placeholder="Ex.: 29,90"></label>
+      <label>Nova foto <span class="small">(opcional)</span><input name="photo" type="file" accept="image/jpeg,image/png,image/webp"></label>
+      <label class="master-check"><input name="restore" type="checkbox"> Restaurar foto original</label>
+      <button class="primary" type="submit">Salvar alterações</button>
+    </form>
+  </main>
+</body>
+</html>

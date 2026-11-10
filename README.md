@@ -18,3 +18,11 @@ O subtotal representa os itens. Disponibilidade e taxa de entrega são confirmad
 ## Instalar como aplicativo
 
 Em uma hospedagem HTTPS, use **Instalar aplicativo** na tela de demonstração ou no rodapé. No Safari do iPhone, use **Compartilhar → Adicionar à Tela de Início**. O navegador pede a confirmação da instalação.
+
+## Painel em /master na Vercel
+
+1. Conecte um Postgres ao projeto da Vercel. Neon pelo Marketplace é uma opção. A função usa `DATABASE_URL` ou `POSTGRES_URL`.
+2. Adicione `ADMIN_PASSWORD` com uma senha forte de pelo menos 12 caracteres e `ADMIN_SESSION_SECRET` com pelo menos 32 caracteres aleatórios. Configure os segredos no ambiente do projeto e faça um novo deploy. O painel cria suas tabelas na primeira operação que usa o banco.
+3. Abra `/master`, entre com a senha, selecione o produto ou a variação e salve o preço e a foto. A foto é convertida em WebP no navegador e armazenada no Postgres. Uma alteração de preço pode ser salva sem selecionar uma nova foto.
+
+O cardápio usa o catálogo padrão quando o banco está indisponível. Os dados do pedido são montados no navegador e seguem para o WhatsApp. Os bairros e taxas da demonstração estão definidos em `deliveryZones` no arquivo `menu.js`.

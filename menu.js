@@ -13,6 +13,12 @@ const catalog = document.querySelector('#catalog');
 const checkout = document.querySelector('#checkout');
 const cartPanel = document.querySelector('#cart');
 const variants = new Map();
+const deliveryZones = new Map([
+  ['Jardim da Villa', 500],
+  ['Parque das Oliveiras', 700],
+  ['Vila do Lago', 900],
+  ['Alto das Palmeiras', 1200],
+]);
 let activeCategory = -1;
 let cart = {};
 
@@ -60,10 +66,17 @@ function changeQuantity(key, difference) {
   renderCart();
 }
 
+function productImage(item, index) {
+  const variant = item.choices[index];
+  return variant.image
+    ? '/api/catalog?image=' + encodeURIComponent(variant.key) + '&v=' + encodeURIComponent(variant.image)
+    : 'fotos/' + (item.optionPics?.[index] ?? item.pic) + '.webp';
+}
+
 function itemCard(item, group) {
   const card = make('article', '', 'item');
   const image = make('img');
-  image.src = 'fotos/' + item.pic + '.webp';
+  image.src = productImage(item, 0);
   image.alt = '';
   image.loading = 'lazy';
   image.width = 480;
@@ -86,7 +99,7 @@ function itemCard(item, group) {
     select.addEventListener('change', () => {
       selection = variants.get(select.value);
       price.textContent = format(selection.price);
-      if (item.optionPics) image.src = 'fotos/' + item.optionPics[select.selectedIndex] + '.webp';
+      image.src = productImage(item, select.selectedIndex);
     });
     label.append(select);
     body.append(label);
@@ -140,7 +153,7 @@ function renderCart() {
   dockCount.textContent = count;
   dockTotal.textContent = format(subtotal);
   dockCount.hidden = dockTotal.hidden = count === 0;
-  document.querySelector('#subtotal').textContent = format(subtotal);
+  renderTotals(subtotal);
   checkout.hidden = !count;
 
   const previousFocus = document.activeElement?.dataset.cartFocus;
@@ -171,39 +184,66 @@ function renderCart() {
   }
 }
 
+function renderTotals(subtotal = cartEntries().reduce((sum, item) => sum + item.quantity * item.price, 0)) {
+  const delivery = checkout.elements.modo.value === 'Entrega';
+  const fee = deliveryZones.get(checkout.elements.bairro.value);
+  document.querySelector('#subtotal').textContent = format(subtotal);
+  document.querySelector('#delivery-summary').hidden = !delivery;
+  document.querySelector('#delivery-fee').textContent = fee === undefined ? 'Selecione o bairro' : format(fee);
+  document.querySelector('#order-total').textContent = delivery && fee === undefined ? 'A calcular' : format(subtotal + (delivery ? fee : 0));
+}
+
 function updateAddress() {
   const delivery = checkout.elements.modo.value === 'Entrega';
   document.querySelector('#address').hidden = !delivery;
-  checkout.elements.endereco.required = delivery;
+  for (const input of document.querySelectorAll('#address input, #address select')) input.disabled = !delivery;
+  for (const name of ['bairro', 'rua', 'numero']) checkout.elements[name].required = delivery;
+  renderTotals();
+}
+
+function updatePayment() {
+  const cash = checkout.elements.pagamento.value === 'Dinheiro';
+  document.querySelector('#cash-change').hidden = !cash;
+  checkout.elements.troco.disabled = !cash;
 }
 
 function orderLink(entries, values) {
   const subtotal = entries.reduce((sum, item) => sum + item.quantity * item.price, 0);
+  const delivery = values.modo === 'Entrega';
+  const fee = delivery ? deliveryZones.get(values.bairro) : 0;
   const lines = entries.map(item => {
     const description = [item.name, item.option, item.category].filter(Boolean).join(' · ');
     return '• ' + item.quantity + '× ' + description + ' — ' + format(item.quantity * item.price);
   });
   const message = [
-    '🍔 *Pedido Villa Burguer*',
-    '',
-    ...lines,
-    '',
-    '💰 *Subtotal dos itens:* ' + format(subtotal),
+    '🍔 *Pedido Villa Burguer*', '', ...lines, '',
+    '*Subtotal:* ' + format(subtotal),
+    ...(delivery ? ['*Taxa de entrega:* ' + format(fee) + ' (demonstração)'] : []),
+    '💰 *Total:* ' + format(subtotal + fee), '',
     '👤 *Cliente:* ' + values.cliente.trim(),
+    '📞 *Celular:* ' + values.telefone.trim(),
     '📦 *Recebimento:* ' + values.modo,
+    '💳 *Pagamento:* ' + values.pagamento,
   ];
-  if (values.modo === 'Entrega') message.push('📍 *Endereço:* ' + values.endereco.trim(), 'Pode confirmar a taxa de entrega?');
+  if (delivery) {
+    const address = [values.rua.trim() + ', ' + values.numero.trim(), values.bairro, values.complemento.trim()].filter(Boolean);
+    message.push('📍 *Endereço:* ' + address.join(' · '));
+    if (values.referencia.trim()) message.push('*Referência:* ' + values.referencia.trim());
+  }
+  if (values.troco?.trim()) message.push('*Troco para:* R$ ' + values.troco.trim());
   if (values.obs.trim()) message.push('📝 *Observações:* ' + values.obs.trim());
   return 'https://wa.me/' + phone + '?text=' + encodeURIComponent(message.join('\n'));
 }
 
 const categoryPhotos = [0, 6, 15, 22, 31, 38, 39, 45];
 const featuredPhotos = [31, 15, 32];
-const featuredCards = featuredPhotos.map(photo => {
-  const group = catalogo.find(category => category.items.some(item => item.pic === photo));
-  return itemCard(group.items.find(item => item.pic === photo), group);
-});
-document.querySelector('#highlight-items').append(...featuredCards);
+function renderHighlights() {
+  const featuredCards = featuredPhotos.map(photo => {
+    const group = catalogo.find(category => category.items.some(item => item.pic === photo));
+    return itemCard(group.items.find(item => item.pic === photo), group);
+  });
+  document.querySelector('#highlight-items').replaceChildren(...featuredCards);
+}
 
 ['Tudo', ...catalogo.map(group => group.name)].forEach((name, index) => {
   const filter = button('', 'category', () => {
@@ -243,21 +283,61 @@ document.querySelectorAll('[data-open]').forEach(control => {
   control.addEventListener('click', () => drawer.showModal());
 });
 document.querySelector('#close').addEventListener('click', () => drawer.close());
+for (const [zone, fee] of deliveryZones) {
+  const option = make('option', zone + ' · ' + format(fee));
+  option.value = zone;
+  checkout.elements.bairro.append(option);
+}
 checkout.elements.modo.addEventListener('change', updateAddress);
+checkout.elements.bairro.addEventListener('change', () => renderTotals());
+checkout.elements.pagamento.addEventListener('change', updatePayment);
+checkout.elements.telefone.addEventListener('input', () => checkout.elements.telefone.setCustomValidity(''));
+checkout.elements.troco.addEventListener('input', () => checkout.elements.troco.setCustomValidity(''));
 checkout.addEventListener('submit', event => {
   event.preventDefault();
   const entries = cartEntries();
   if (!entries.length) return;
   const values = Object.fromEntries(new FormData(checkout));
-  for (const input of [checkout.elements.cliente, checkout.elements.endereco]) {
+  for (const input of [checkout.elements.cliente, checkout.elements.rua, checkout.elements.numero]) {
     if (input.required && !input.value.trim()) {
       input.value = '';
       input.reportValidity();
       return;
     }
   }
+  if (!/^[1-9]{2}9?[0-9]{8}$/.test(values.telefone.replace(/\D/g, ''))) {
+    checkout.elements.telefone.setCustomValidity('Informe um celular com DDD.');
+    checkout.elements.telefone.reportValidity();
+    return;
+  }
+  if (values.troco?.trim() && !/^\d+(?:[,.]\d{1,2})?$/.test(values.troco.trim())) {
+    checkout.elements.troco.setCustomValidity('Informe um valor como 100,00.');
+    checkout.elements.troco.reportValidity();
+    return;
+  }
   window.open(orderLink(entries, values), '_blank', 'noopener,noreferrer');
 });
+renderHighlights();
 renderMenu();
 renderCart();
 updateAddress();
+updatePayment();
+
+fetch('/api/catalog', { cache: 'no-store', signal: AbortSignal.timeout(5000) })
+  .then(response => response.ok ? response.json() : null)
+  .then(data => {
+    if (!data?.items) return;
+    for (const [key, update] of Object.entries(data.items)) {
+      const variant = variants.get(key);
+      if (!variant) continue;
+      if (Number.isInteger(update.price) && update.price > 0) variant.price = update.price;
+      if (typeof update.image === 'string') variant.image = update.image;
+    }
+    const hero = catalogo.flatMap(group => group.items).find(item => item.pic === 31);
+    document.querySelector('.hero-photo').src = productImage(hero, 0);
+    renderHighlights();
+    renderMenu();
+    renderCart();
+  })
+  .catch(() => {});
+

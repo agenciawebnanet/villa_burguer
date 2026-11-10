@@ -1,0 +1,6 @@
+{
+  "rewrites": [{ "source": "/master", "destination": "/master.html" }],
+  "headers": [
+    { "source": "/master", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] }
+  ]
+}
