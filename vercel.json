@@ -1,6 +1,23 @@
 {
-  "rewrites": [{ "source": "/master", "destination": "/master.html" }],
+  "rewrites": [
+    {
+      "source": "/master",
+      "destination": "/master.html"
+    }
+  ],
   "headers": [
-    { "source": "/master", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] }
+    {
+      "source": "/master",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    }
   ]
 }

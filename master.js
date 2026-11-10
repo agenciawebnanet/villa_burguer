@@ -6,7 +6,7 @@ const editor = document.querySelector('#master-editor');
 const logout = document.querySelector('#logout');
 const status = document.querySelector('#master-status');
 const preview = document.querySelector('#master-photo');
-const itemSelect = editor.elements.product;
+const itemSelect = editor.querySelector('select');
 const items = new Map();
 let updates = {};
 let previewUrl;
